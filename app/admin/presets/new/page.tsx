@@ -7,7 +7,7 @@ export default async function NewPresetPage() {
 
   return (
     <Card>
-      <Typography.Title level={2}>Create New Preset</Typography.Title>
+      <h2>Create New Preset</h2>
       <NewPresetForm />
     </Card>
   );

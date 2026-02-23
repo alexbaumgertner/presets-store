@@ -18,26 +18,52 @@ export default async function AdminPresetsPage() {
           <Button type="primary">New preset</Button>
         </Link>
       </Space>
-      <Table
-        rowKey={(row) => String(row._id)}
-        dataSource={presets}
-        columns={[
-          { title: "Title", dataIndex: "title" },
-          { title: "Processor", dataIndex: "processorType" },
-          { title: "Price", render: (_, row) => `$${row.price.toFixed(2)}` },
-          {
-            title: "Tags",
-            render: (_, row) => row.tags.map((tag: string) => <Tag key={tag}>{tag}</Tag>),
-          },
-          { title: "Published", render: (_, row) => <Switch checked={row.isPublished} disabled /> },
-          {
-            title: "Actions",
-            render: (_, row) => (
-              <AdminPresetActions id={String(row._id)} isPublished={row.isPublished} />
-            ),
-          },
-        ]}
-      />
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr>
+            <th style={{ borderBottom: "1px solid #e8e8e8", textAlign: "left", padding: 8 }}>
+              Title
+            </th>
+            <th style={{ borderBottom: "1px solid #e8e8e8", textAlign: "left", padding: 8 }}>
+              Processor
+            </th>
+            <th style={{ borderBottom: "1px solid #e8e8e8", textAlign: "left", padding: 8 }}>
+              Price
+            </th>
+            <th style={{ borderBottom: "1px solid #e8e8e8", textAlign: "left", padding: 8 }}>
+              Tags
+            </th>
+            <th style={{ borderBottom: "1px solid #e8e8e8", textAlign: "left", padding: 8 }}>
+              Published
+            </th>
+            <th style={{ borderBottom: "1px solid #e8e8e8", textAlign: "left", padding: 8 }}>
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {presets.map((row: any) => (
+            <tr key={row._id}>
+              <td style={{ borderBottom: "1px solid #e8e8e8", padding: 8 }}>{row.title}</td>
+              <td style={{ borderBottom: "1px solid #e8e8e8", padding: 8 }}>{row.processorType}</td>
+              <td style={{ borderBottom: "1px solid #e8e8e8", padding: 8 }}>
+                ${Number(row.price).toFixed(2)}
+              </td>
+              <td style={{ borderBottom: "1px solid #e8e8e8", padding: 8 }}>
+                {row.tags.map((tag: string) => (
+                  <Tag key={tag}>{tag}</Tag>
+                ))}
+              </td>
+              <td style={{ borderBottom: "1px solid #e8e8e8", padding: 8 }}>
+                <Switch checked={row.isPublished} disabled />
+              </td>
+              <td style={{ borderBottom: "1px solid #e8e8e8", padding: 8 }}>
+                <AdminPresetActions id={String(row._id)} isPublished={row.isPublished} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
 }

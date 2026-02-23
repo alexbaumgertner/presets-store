@@ -26,3 +26,16 @@ export async function writeJSON<T>(filename: string, data: T): Promise<void> {
   await fs.rename(tmp, full);
 }
 
+export async function uploadFileToBlob(pathname: string, file: File) {
+  await ensureDataDir();
+  const full = path.join(dataDir, pathname);
+  const buffer = await file.arrayBuffer();
+  await fs.writeFile(full, Buffer.from(buffer));
+  return full;
+}
+
+export async function downloadFileFromBlob(pathname: string) {
+  await ensureDataDir();
+  const full = path.join(dataDir, pathname);
+  return fs.readFile(full);
+}
