@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
-import { PresetModel } from "@/models/Preset";
+import { presetsController } from "@/lib/controllers/PresetsController";
+import { usersController } from "@/lib/controllers/UsersController";
 import { getCurrentAppUser, requireAdmin } from "@/lib/auth";
 import { uploadFileToBlob } from "@/lib/blob";
 import { ApiResponse, PresetDto } from "@/types/api";
@@ -9,7 +10,7 @@ export async function GET() {
   await connectToDatabase();
   const user = await getCurrentAppUser();
   const filter = user?.role === "admin" ? {} : { isPublished: true };
-  const presets = await PresetModel.find(filter).sort({ createdAt: -1 }).lean();
+  const presets = await presetsController.get({ ...filter, createdAt: -1 });
 
   return NextResponse.json<ApiResponse<PresetDto[]>>({
     success: true,
@@ -53,14 +54,14 @@ export async function POST(request: Request) {
       uploadFileToBlob(`covers/${Date.now()}-${coverImage.name}`, coverImage)
     ]);
 
-    const preset = await PresetModel.create({
+    const preset = await presetsController.create({
       title,
       description,
       processorType,
       tags,
       price,
       isPublished,
-      authorId: String(admin._id),
+      authorId: String((admin as any)._id ?? admin.email ?? "admin"),
       presetFileUrl: presetBlob.url,
       previewAudioUrl: audioBlob.url,
       coverImageUrl: coverBlob.url

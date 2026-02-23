@@ -2,13 +2,16 @@ import { notFound } from "next/navigation";
 import { Button, Card, Tag, Typography } from "antd";
 import Link from "next/link";
 import { connectToDatabase } from "@/lib/mongoose";
-import { PresetModel } from "@/models/Preset";
+import { presetsController, type Preset } from "@/lib/controllers/PresetsController";
 import { BuyButton } from "@/components/BuyButton";
 
-export default async function PresetDetailsPage({ params }: { params: { id: string } }) {
+export default async function PresetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   await connectToDatabase();
-  const preset = await PresetModel.findOne({ _id: params.id, isPublished: true }).lean();
-  if (!preset) notFound();
+  const { id } = await params;
+  const preset = await presetsController.getById(id);
+  if (!preset || !preset.isPublished) {
+    return notFound();
+  }
 
   return (
     <Card cover={<img src={preset.coverImageUrl} alt={preset.title} style={{ maxHeight: 450, objectFit: "cover" }} />}>

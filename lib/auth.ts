@@ -1,23 +1,16 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
-import { UserModel } from "@/models/User";
-import { connectToDatabase } from "@/lib/mongoose";
+
+const useStubAuth = true;
+
+async function getStubUser() {
+  return { email: "dev@example.com", role: "admin", purchasedPresets: [] };
+}
 
 export async function getCurrentAppUser() {
-  const { userId } = await auth();
-  if (!userId) return null;
+  if (useStubAuth) {
+    return getStubUser();
+  }
 
-  await connectToDatabase();
-  const clerkUser = await currentUser();
-  if (!clerkUser?.emailAddresses?.[0]?.emailAddress) return null;
-
-  const email = clerkUser.emailAddresses[0].emailAddress;
-  const user = await UserModel.findOneAndUpdate(
-    { email },
-    { $setOnInsert: { email, role: "user", purchasedPresets: [] } },
-    { new: true, upsert: true }
-  );
-
-  return user;
+  return null;
 }
 
 export async function requireAdmin() {

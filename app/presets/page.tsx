@@ -1,15 +1,15 @@
 import { Col, Empty, Row, Typography } from "antd";
 import { connectToDatabase } from "@/lib/mongoose";
-import { PresetModel } from "@/models/Preset";
+import { presetsController } from "@/lib/controllers/PresetsController";
 import { PresetCard } from "@/components/PresetCard";
 
 export default async function PresetsPage() {
   await connectToDatabase();
-  const presets = await PresetModel.find({ isPublished: true }).sort({ createdAt: -1 }).lean();
+  const presets = await presetsController.get({ isPublished: true, createdAt: -1 });
 
   return (
     <>
-      <Typography.Title>Preset Marketplace</Typography.Title>
+      <h2>Preset Marketplace</h2>
       {presets.length === 0 ? (
         <Empty description="No presets published yet" />
       ) : (
@@ -26,7 +26,7 @@ export default async function PresetsPage() {
                   price: preset.price,
                   previewAudioUrl: preset.previewAudioUrl,
                   coverImageUrl: preset.coverImageUrl,
-                  isPublished: preset.isPublished
+                  isPublished: preset.isPublished,
                 }}
               />
             </Col>

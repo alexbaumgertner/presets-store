@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { connectToDatabase } from "@/lib/mongoose";
-import { PresetModel } from "@/models/Preset";
+import { presetsController } from "@/lib/controllers/PresetsController";
 import { getCurrentAppUser } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
 
   const { presetId } = await request.json();
-  const preset = await PresetModel.findById(presetId);
+  const preset = await presetsController.getById(presetId);
   if (!preset || !preset.isPublished) {
     return NextResponse.json({ success: false, error: "Preset unavailable" }, { status: 404 });
   }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       }
     ],
     metadata: {
-      userId: String(user._id),
+      userId: String((user as any)._id ?? user.email ?? "user"),
       presetIds: String(preset._id)
     }
   });

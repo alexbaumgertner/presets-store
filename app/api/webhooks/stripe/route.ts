@@ -3,12 +3,13 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { connectToDatabase } from "@/lib/mongoose";
-import { OrderModel } from "@/models/Order";
-import { UserModel } from "@/models/User";
+import { ordersController } from "@/lib/controllers/OrdersController";
+import { usersController } from "@/lib/controllers/UsersController";
 
 export async function POST(request: Request) {
   const body = await request.text();
-  const signature = headers().get("stripe-signature");
+  const headerStore = await headers();
+  const signature = headerStore.get("stripe-signature");
 
   if (!signature || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json({ success: false, error: "Webhook misconfigured" }, { status: 400 });
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
     const presetIds = (session.metadata?.presetIds ?? "").split(",").filter(Boolean);
 
     await connectToDatabase();
-    await OrderModel.create({
+    await ordersController.create({
       userId,
       presets: presetIds,
       totalPrice: (session.amount_total ?? 0) / 100,
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
       status: "paid"
     });
 
-    await UserModel.findByIdAndUpdate(userId, { $addToSet: { purchasedPresets: { $each: presetIds } } });
+    await usersController.addToSet(userId, "purchasedPresets", presetIds);
   }
 
   return NextResponse.json({ received: true });

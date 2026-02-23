@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongoose";
-import { PresetModel } from "@/models/Preset";
+import { presetsController } from "@/lib/controllers/PresetsController";
 
 export async function GET() {
   await requireAdmin();
   await connectToDatabase();
-  const presets = await PresetModel.find({}).sort({ createdAt: -1 }).lean();
+  const presets = await presetsController.get({ createdAt: -1 });
   return NextResponse.json({ success: true, data: presets });
 }
