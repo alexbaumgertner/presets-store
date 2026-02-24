@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:memory": "USE_MONGODB_MEMORY=1 next dev",
     "build": "next build",
-    "start": "USE_MONGODB_MEMORY=1 next start",
+    "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed": "tsx scripts/seed.ts"
@@ -28,7 +27,6 @@
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "mongodb-memory-server": "^11.0.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
