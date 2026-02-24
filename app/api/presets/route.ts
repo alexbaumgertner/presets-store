@@ -64,9 +64,9 @@ export async function POST(request: NextRequest) {
     }
 
     const [presetPath, audioPath, coverPath] = await Promise.all([
-      uploadFileToBlob(`presets/${Date.now()}-${(presetFile as File).name}`, presetFile as File),
-      previewAudio ? uploadFileToBlob(`previews/${Date.now()}-${(previewAudio as File).name}`, previewAudio as File) : Promise.resolve(null),
-      coverImage ? uploadFileToBlob(`covers/${Date.now()}-${(coverImage as File).name}`, coverImage as File) : Promise.resolve(null)
+      uploadFileToBlob(`presets/${Date.now()}-${(presetFile as File).name}`, presetFile),
+      previewAudio ? uploadFileToBlob(`previews/${Date.now()}-${(previewAudio as File).name}`, previewAudio) : Promise.resolve(null),
+      coverImage ? uploadFileToBlob(`covers/${Date.now()}-${(coverImage as File).name}`, coverImage) : Promise.resolve(null)
     ]);
 
     const authorId = typeof admin === "object" && admin !== null

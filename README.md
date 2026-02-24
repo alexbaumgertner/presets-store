@@ -46,3 +46,9 @@ npm run dev
 ### Using Real Services (Production)
 
 Set up your `.env` file with real service credentials and ensure `NEXT_PUBLIC_USE_STUBS` is not set or false.
+
+## Environment variables
+
+- `BLOB_READ_WRITE_TOKEN` — (required for uploading to Vercel Blob) set this to a Vercel Blob read/write token when running in production or when you want uploads to go to Vercel Blob storage. If this value is not present, the app will fall back to local `data/` storage for development.
+
+Add the variable to your `.env` (or use `.env.local`) or provide it in your Vercel project/environment configuration.

@@ -14,13 +14,25 @@ export default async function PresetDetailsPage({ params }: { params: Promise<{ 
   }
 
   return (
-    <Card cover={<img src={preset.coverImageUrl} alt={preset.title} style={{ maxHeight: 450, objectFit: "cover" }} />}>
-      <Typography.Title>{preset.title}</Typography.Title>
-      <Typography.Paragraph>{preset.description}</Typography.Paragraph>
-      <Typography.Text strong>{preset.processorType}</Typography.Text>
-      <div style={{ margin: "12px 0" }}>{preset.tags.map((t) => <Tag key={t}>{t}</Tag>)}</div>
+    <Card
+      cover={
+        <img
+          src={preset.coverImageUrl}
+          alt={preset.title}
+          style={{ maxHeight: 450, objectFit: "cover" }}
+        />
+      }
+    >
+      <h1>{preset.title}</h1>
+      <p>{preset.description}</p>
+      <strong>{preset.processorType}</strong>
+      <div style={{ margin: "12px 0" }}>
+        {preset.tags.map((t) => (
+          <Tag key={t}>{t}</Tag>
+        ))}
+      </div>
       <audio controls src={preset.previewAudioUrl} style={{ width: "100%" }} />
-      <Typography.Title level={4}>${preset.price.toFixed(2)}</Typography.Title>
+      <h4>${preset.price.toFixed(2)}</h4>
       <BuyButton presetId={String(preset._id)} />
       <div style={{ marginTop: 16 }}>
         <Link href="/presets">
