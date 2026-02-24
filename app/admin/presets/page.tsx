@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { Button, Space, Switch, Table, Tag, Typography } from "antd";
 import { requireAdmin } from "@/lib/auth";
-import { connectToDatabase } from "@/lib/mongoose";
 import { presetsController } from "@/lib/controllers/PresetsController";
 import { AdminPresetActions } from "@/components/AdminPresetActions";
 
 export default async function AdminPresetsPage() {
   await requireAdmin();
-  await connectToDatabase();
   const presets = await presetsController.get({ createdAt: -1 });
 
   return (

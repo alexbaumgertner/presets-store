@@ -22,6 +22,7 @@ export function AppShell({
           items={[
             { key: "presets", label: <Link href="/presets">Presets</Link> },
             { key: "library", label: <Link href="/library">Library</Link> },
+            { key: "cart", label: <Link href="/cart">Cart</Link> },
             { key: "admin", label: <Link href="/admin/presets">Admin</Link> },
           ]}
         />

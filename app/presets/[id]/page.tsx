@@ -1,12 +1,10 @@
 import { notFound } from "next/navigation";
 import { Button, Card, Tag, Typography } from "antd";
 import Link from "next/link";
-import { connectToDatabase } from "@/lib/mongoose";
 import { presetsController, type Preset } from "@/lib/controllers/PresetsController";
 import { BuyButton } from "@/components/BuyButton";
 
 export default async function PresetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-  await connectToDatabase();
   const { id } = await params;
   const preset = await presetsController.getById(id);
   if (!preset || !preset.isPublished) {

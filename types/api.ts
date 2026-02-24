@@ -16,3 +16,14 @@ export interface PresetDto {
   coverImageUrl: string;
   isPublished: boolean;
 }
+
+export interface CartDto {
+  userId: string;
+  items: CartItemDto[];
+}
+
+export interface CartItemDto {
+  presetId: string;
+  price: number;
+  addedAt: Date;
+}

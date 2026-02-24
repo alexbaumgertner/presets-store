@@ -1,12 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/mongoose";
 import { presetsController } from "@/lib/controllers/PresetsController";
 import { getCurrentAppUser, requireAdmin } from "@/lib/auth";
 import { uploadFileToBlob } from "@/lib/controllers/storeFile";
 import { ApiResponse, PresetDto } from "@/types/api";
 
 export async function GET() {
-  await connectToDatabase();
   const user = await getCurrentAppUser();
   const filter = user?.role === "admin" ? {} : { isPublished: true };
   const presets = await presetsController.get({ ...filter, createdAt: -1 });
@@ -30,7 +28,6 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const admin = await requireAdmin();
-    await connectToDatabase();
 
     const formData = await request.formData();
 

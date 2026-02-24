@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 import { Card, Row, Col } from "antd";
 import { getCurrentAppUser } from "@/lib/auth";
-import { connectToDatabase } from "@/lib/mongoose";
 import { presetsController } from "@/lib/controllers/PresetsController";
+import Link from "next/link";
+import { DownloadButton } from "@/components/DownloadButton";
 
 export default async function LibraryPage() {
   const user = await getCurrentAppUser();
   if (!user) redirect("/sign-in");
 
-  await connectToDatabase();
   const presets = (
     await Promise.all(user.purchasedPresets.map((id: string) => presetsController.getById(id)))
   ).filter(Boolean);
@@ -22,7 +22,7 @@ export default async function LibraryPage() {
         {presets.map((preset) => (
           <Col key={String(preset?._id)} xs={24} md={12} lg={8}>
             <Card
-              hoverable
+              variant="outlined"
               cover={
                 <img
                   src={preset?.coverImageUrl}
@@ -31,10 +31,13 @@ export default async function LibraryPage() {
                 />
               }
             >
-              <Card.Meta
-                title={preset?.title}
-                description={`${preset?.processorType} · ${preset?.tags?.join(", ")}`}
-              />
+              <div>
+                <h5>{preset?.title}</h5>
+                <p>${preset?.price.toFixed(2)}</p>
+                <Link href={preset?.presetFileUrl ?? ""}>
+                  <DownloadButton presetId={preset?._id ?? ""} />
+                </Link>
+              </div>
             </Card>
           </Col>
         ))}

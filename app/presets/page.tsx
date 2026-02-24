@@ -1,10 +1,8 @@
-import { Col, Empty, Row, Typography } from "antd";
-import { connectToDatabase } from "@/lib/mongoose";
+import { Col, Empty, Row } from "antd";
 import { presetsController } from "@/lib/controllers/PresetsController";
 import { PresetCard } from "@/components/PresetCard";
 
 export default async function PresetsPage() {
-  await connectToDatabase();
   const presets = await presetsController.get({ isPublished: true, createdAt: -1 });
 
   return (
