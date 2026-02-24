@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:memory": "MONGODB_URI= USE_MONGODB_MEMORY=1 next dev",
+    "dev:memory": "USE_MONGODB_MEMORY=1 next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "USE_MONGODB_MEMORY=1 next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed": "tsx scripts/seed.ts"

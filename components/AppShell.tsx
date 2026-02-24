@@ -22,12 +22,12 @@ export function AppShell({
           items={[
             { key: "presets", label: <Link href="/presets">Presets</Link> },
             { key: "library", label: <Link href="/library">Library</Link> },
-            { key: "admin", label: <Link href="/admin/presets">Admin</Link> }
+            { key: "admin", label: <Link href="/admin/presets">Admin</Link> },
           ]}
         />
         {rightSlot}
       </Header>
-      <Content>
+      <Content style={{ width: "100%" }}>
         <main>{children}</main>
       </Content>
     </Layout>
