@@ -20,14 +20,20 @@ export default async function LibraryPage() {
       <h2>My Library</h2>
       <Row gutter={[16, 16]}>
         {presets.map((preset) => (
-          <Col key={String(preset._id)} xs={24} md={12} lg={8}>
+          <Col key={String(preset?._id)} xs={24} md={12} lg={8}>
             <Card
               hoverable
-              cover={<img src={preset.coverImageUrl} alt={preset.title} style={{ maxHeight: 200, objectFit: "cover" }} />}
+              cover={
+                <img
+                  src={preset?.coverImageUrl}
+                  alt={preset?.title}
+                  style={{ maxHeight: 200, objectFit: "cover" }}
+                />
+              }
             >
               <Card.Meta
-                title={preset.title}
-                description={`${preset.processorType} · ${preset.tags.join(", ")}`}
+                title={preset?.title}
+                description={`${preset?.processorType} · ${preset?.tags?.join(", ")}`}
               />
             </Card>
           </Col>

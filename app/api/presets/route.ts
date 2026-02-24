@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/mongoose";
 import { presetsController } from "@/lib/controllers/PresetsController";
-import { usersController } from "@/lib/controllers/UsersController";
 import { getCurrentAppUser, requireAdmin } from "@/lib/auth";
 import { uploadFileToBlob } from "@/lib/controllers/storeFile";
 import { ApiResponse, PresetDto } from "@/types/api";
