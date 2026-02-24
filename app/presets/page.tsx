@@ -24,6 +24,7 @@ export default async function PresetsPage() {
                   processorType: preset.processorType,
                   tags: preset.tags,
                   price: preset.price,
+                  presetFileUrl: preset.presetFileUrl,
                   previewAudioUrl: preset.previewAudioUrl,
                   coverImageUrl: preset.coverImageUrl,
                   isPublished: preset.isPublished,

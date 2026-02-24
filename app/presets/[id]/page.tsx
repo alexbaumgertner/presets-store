@@ -33,7 +33,9 @@ export default async function PresetDetailsPage({ params }: { params: Promise<{ 
       </div>
       <audio controls src={preset.previewAudioUrl} style={{ width: "100%" }} />
       <h4>${preset.price.toFixed(2)}</h4>
-      <BuyButton presetId={String(preset._id)} />
+      <Link href={preset.presetFileUrl ?? ""}>
+        <Button>Download</Button>
+      </Link>
       <div style={{ marginTop: 16 }}>
         <Link href="/presets">
           <Button>Back to presets</Button>

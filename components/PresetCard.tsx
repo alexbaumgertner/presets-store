@@ -8,7 +8,11 @@ export function PresetCard({ preset }: { preset: PresetDto }) {
     <Card
       title={preset.title}
       extra={<span>${preset.price.toFixed(2)}</span>}
-      actions={[<Link key="view" href={`/presets/${preset._id}`}>View</Link>]}
+      actions={[
+        <Link key="view" href={`/presets/${preset._id}`}>
+          View
+        </Link>,
+      ]}
     >
       <img src={preset.coverImageUrl} alt={preset.title} className={styles.cardImage} />
       <p>{preset.processorType}</p>
@@ -18,9 +22,9 @@ export function PresetCard({ preset }: { preset: PresetDto }) {
         ))}
       </div>
       <audio controls className={styles.audio} src={preset.previewAudioUrl} />
-      <Link href={`/presets/${preset._id}`}>
+      <Link href={preset.presetFileUrl ?? ""}>
         <Button type="primary" style={{ marginTop: 12 }} block>
-          Details
+          Download
         </Button>
       </Link>
     </Card>

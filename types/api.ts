@@ -12,6 +12,7 @@ export interface PresetDto {
   tags: string[];
   price: number;
   previewAudioUrl: string;
+  presetFileUrl?: string | null;
   coverImageUrl: string;
   isPublished: boolean;
 }
