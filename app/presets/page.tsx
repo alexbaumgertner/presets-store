@@ -1,8 +1,12 @@
 import { Col, Empty, Row } from "antd";
 import { presetsController } from "@/lib/controllers/PresetsController";
 import { PresetCard } from "@/components/PresetCard";
+import { connectToDatabase } from "@/lib/controllers/db";
+
+export const dynamic = "force-dynamic";
 
 export default async function PresetsPage() {
+  await connectToDatabase();
   const presets = await presetsController.get({ isPublished: true, createdAt: -1 });
 
   return (

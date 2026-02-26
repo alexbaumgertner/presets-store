@@ -1,9 +1,9 @@
 import { Card, Typography } from "antd";
-import { requireAdmin } from "@/lib/auth";
+import { requireManagerOrAdmin } from "@/lib/auth";
 import { NewPresetForm } from "@/components/NewPresetForm";
 
 export default async function NewPresetPage() {
-  await requireAdmin();
+  await requireManagerOrAdmin();
 
   return (
     <Card style={{ width: "100%" }}>

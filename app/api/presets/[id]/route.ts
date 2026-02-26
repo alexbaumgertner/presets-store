@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { presetsController, Preset } from "@/lib/controllers/PresetsController";
-import { getCurrentAppUser, requireAdmin } from "@/lib/auth";
+import { getCurrentAppUser, requireManagerOrAdmin } from "@/lib/auth";
 import { ApiResponse, PresetDto } from "@/types/api";
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -8,7 +8,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   const { id } = await params;
   const preset = await presetsController.getById(id);
 
-  if (!preset || (!preset.isPublished && user?.role !== "admin")) {
+  if (!preset || (!preset.isPublished && user?.role !== "admin" && user?.role !== "manager")) {
     return NextResponse.json<ApiResponse<null>>({ success: false, error: "Not found" }, { status: 404 });
   }
 
@@ -31,7 +31,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    await requireAdmin();
+    await requireManagerOrAdmin();
     const body = await request.json();
     const preset = await presetsController.update(id, body);
     if (!preset) return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
@@ -44,7 +44,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    await requireAdmin();
+    await requireManagerOrAdmin();
     await presetsController.delete(id);
     return NextResponse.json({ success: true });
   } catch (error) {

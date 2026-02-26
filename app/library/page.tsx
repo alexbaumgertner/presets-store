@@ -7,7 +7,7 @@ import { DownloadButton } from "@/components/DownloadButton";
 
 export default async function LibraryPage() {
   const user = await getCurrentAppUser();
-  if (!user) redirect("/sign-in");
+  if (!user) redirect("/signin");
 
   const presets = (
     await Promise.all(user.purchasedPresets.map((id: string) => presetsController.getById(id)))

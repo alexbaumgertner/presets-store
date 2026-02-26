@@ -1,12 +1,12 @@
 import { NextResponse, NextRequest } from "next/server";
 import { presetsController } from "@/lib/controllers/PresetsController";
-import { getCurrentAppUser, requireAdmin } from "@/lib/auth";
+import { getCurrentAppUser, requireManagerOrAdmin } from "@/lib/auth";
 import { uploadFileToBlob } from "@/lib/controllers/storeFile";
 import { ApiResponse, PresetDto } from "@/types/api";
 
 export async function GET() {
   const user = await getCurrentAppUser();
-  const filter = user?.role === "admin" ? {} : { isPublished: true };
+  const filter = user?.role === "admin" || user?.role === "manager" ? {} : { isPublished: true };
   const presets = await presetsController.get({ ...filter, createdAt: -1 });
 
   return NextResponse.json<ApiResponse<PresetDto[]>>({
@@ -27,7 +27,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const admin = await requireAdmin();
+    const managerOrAdmin = await requireManagerOrAdmin();
 
     const formData = await request.formData();
 
@@ -65,9 +65,9 @@ export async function POST(request: NextRequest) {
       coverImage ? uploadFileToBlob(`covers/${Date.now()}-${(coverImage as File).name}`, coverImage) : Promise.resolve(null)
     ]);
 
-    const authorId = typeof admin === "object" && admin !== null
-      ? String((admin as any)._id ?? (admin as any).email ?? "admin")
-      : "admin";
+    const authorId = typeof managerOrAdmin === "object" && managerOrAdmin !== null
+      ? String((managerOrAdmin as any)._id ?? (managerOrAdmin as any).email ?? "manager")
+      : "manager";
 
     const preset = await presetsController.create({
       title,

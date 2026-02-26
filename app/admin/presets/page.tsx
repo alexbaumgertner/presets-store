@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button, Space, Switch, Table, Tag, Typography } from "antd";
-import { requireAdmin } from "@/lib/auth";
+import { requireManagerOrAdmin } from "@/lib/auth";
 import { presetsController } from "@/lib/controllers/PresetsController";
 import { AdminPresetActions } from "@/components/AdminPresetActions";
 
 export default async function AdminPresetsPage() {
-  await requireAdmin();
+  await requireManagerOrAdmin();
   const presets = await presetsController.get({ createdAt: -1 });
 
   return (

@@ -6,7 +6,7 @@ import fs from "fs";
 
 export default async function CartPage() {
   const user = await getCurrentAppUser();
-  if (!user) redirect("/sign-in");
+  if (!user) redirect("/signin");
 
   const cart = await cartController.getByUser(String(user._id));
 
