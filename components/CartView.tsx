@@ -60,26 +60,50 @@ export function CartView({ cart }: { cart: CartDto }) {
                 </Button>
               }
             >
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
                 {item.coverImageUrl && (
                   <img
                     src={item.coverImageUrl}
                     alt={item.title || "Preset"}
                     style={{
-                      width: 48,
-                      height: 48,
+                      width: 80,
+                      height: 80,
                       objectFit: "cover",
                       borderRadius: 4,
-                      marginRight: 16,
+                      flexShrink: 0,
                     }}
                   />
                 )}
-                <div>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <Typography.Text strong>{item.title || item.presetId}</Typography.Text>
-                  <br />
-                  <Typography.Text type="secondary">
-                    ${Number(item.price).toFixed(2)}
-                  </Typography.Text>
+                  {item.processorType && (
+                    <>
+                      {" "}
+                      <Typography.Text type="secondary">({item.processorType})</Typography.Text>
+                    </>
+                  )}
+                  {item.authorId && (
+                    <div>
+                      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                        By {item.authorId}
+                      </Typography.Text>
+                    </div>
+                  )}
+                  {item.description && (
+                    <div style={{ marginTop: 4 }}>
+                      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                        {item.description}
+                      </Typography.Text>
+                    </div>
+                  )}
+                  {item.previewAudioUrl && (
+                    <div style={{ marginTop: 8 }}>
+                      <audio src={item.previewAudioUrl} controls style={{ width: "100%", maxWidth: 300, height: 32 }} />
+                    </div>
+                  )}
+                  <div style={{ marginTop: 8 }}>
+                    <Typography.Text type="secondary">${Number(item.price).toFixed(2)}</Typography.Text>
+                  </div>
                 </div>
               </div>
             </Card>

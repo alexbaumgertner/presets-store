@@ -2,47 +2,37 @@ import { connectToDatabase } from "@/lib/controllers/db";
 import CartModel from "@/models/Cart";
 import { presetsController } from "./PresetsController";
 
-export class CartController {
-  async getByUser(userId: string) {
+export const cartController = {
+  getByUser: async (userId: string) => {
     await connectToDatabase();
     const cart = await CartModel.findOne({ userId }).lean().exec();
-    // #region agent log
-    ;(function () {
-      try {
-        fetch('http://127.0.0.1:7364/ingest/72c0686f-b405-4f98-81f4-77e8261d35c8', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Debug-Session-Id': 'c4a4d1'
-          },
-          body: JSON.stringify({
-            sessionId: 'c4a4d1',
-            runId: 'initial',
-            hypothesisId: 'A2',
-            location: 'lib/controllers/CartController.ts:getByUser',
-            message: 'cart fetched (controller)',
-            data: {
-              found: !!cart,
-              id_type: typeof (cart as any)?._id,
-              id_toString: cart ? String((cart as any)?._id) : null,
-              items_isArray: Array.isArray((cart as any)?.items),
-              first_item: (cart as any)?.items?.[0] ? {
-                presetId_type: typeof (cart as any).items[0].presetId,
-                presetId_string: String((cart as any).items[0].presetId),
-                price_type: typeof (cart as any).items[0].price
-              } : null
-            },
-            timestamp: Date.now()
-          })
-        }).catch(()=>{});
-      } catch (e) {}
-    })();
-    // #endregion
     if (!cart) return { userId, items: [] as any[] };
-    return cart;
-  }
+    const items = cart.items || [];
+    const presets = await Promise.all(items.map((it: any) => presetsController.getById(String(it.presetId))));
+    const enrichedItems = items.map((it: any, i: number) => {
+      const preset = presets[i];
+      return {
+        presetId: String(it.presetId),
+        price: Number(it.price),
+        addedAt: it.addedAt ? new Date(it.addedAt).toISOString() : undefined,
+        title: preset?.title ?? "",
+        description: preset?.description ?? "",
+        processorType: preset?.processorType ?? "",
+        previewAudioUrl: preset?.previewAudioUrl ?? "",
+        coverImageUrl: preset?.coverImageUrl ?? "",
+        authorId: preset?.authorId ?? "",
+      };
+    });
+    return {
+      _id: String(cart._id),
+      userId: cart.userId,
+      items: enrichedItems,
+      createdAt: cart.createdAt ? new Date(cart.createdAt).toISOString() : undefined,
+      updatedAt: cart.updatedAt ? new Date(cart.updatedAt).toISOString() : undefined,
+    };
+  },
 
-  async addItem(userId: string, presetId: string, price: number) {
+  addItem: async (userId: string, presetId: string, price: number) => {
     await connectToDatabase();
     // ensure preset exists
     const preset = await presetsController.getById(presetId);
@@ -50,7 +40,11 @@ export class CartController {
 
     const cart = await CartModel.findOne({ userId }).exec();
     if (!cart) {
-      return await CartModel.create({ userId, items: [{ presetId, price, addedAt: new Date() }] });
+      const newCart = await CartModel.create({ userId, items: [{ presetId, price, addedAt: new Date() }] });
+      return {
+        ...newCart.toObject(),
+        _id: String(newCart._id),
+      };
     }
 
     // dedupe by presetId
@@ -59,19 +53,25 @@ export class CartController {
       cart.items.push({ presetId, price, addedAt: new Date() } as any);
       await cart.save();
     }
-    return cart.toObject();
-  }
+    return {
+      //userId,
+      //items: cart.items.map((i: any) => ({ presetId: String(i.presetId), price: Number(i.price) })),
+      // total: cart.items.reduce((s: number, it: any) => s + Number(it.price || 0), 0),
+      createdAt: cart.createdAt,
+      updatedAt: cart.updatedAt
+    };
+  },
 
-  async removeItem(userId: string, presetId: string) {
+  removeItem: async (userId: string, presetId: string) => {
     await connectToDatabase();
     const cart = await CartModel.findOne({ userId }).exec();
     if (!cart) return null;
     cart.items = cart.items.filter((i: any) => String(i.presetId) !== String(presetId));
     await cart.save();
     return cart.toObject();
-  }
+  },
 
-  async clearCart(userId: string) {
+  clearCart: async (userId: string) => {
     await connectToDatabase();
     const cart = await CartModel.findOne({ userId }).exec();
     if (!cart) return null;
@@ -79,7 +79,5 @@ export class CartController {
     await cart.save();
     return cart.toObject();
   }
-}
-
-export const cartController = new CartController();
+};
 

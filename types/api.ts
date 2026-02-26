@@ -25,5 +25,11 @@ export interface CartDto {
 export interface CartItemDto {
   presetId: string;
   price: number;
-  addedAt: Date;
+  addedAt?: string;
+  title?: string;
+  description?: string;
+  processorType?: string;
+  previewAudioUrl?: string;
+  coverImageUrl?: string;
+  authorId?: string;
 }
