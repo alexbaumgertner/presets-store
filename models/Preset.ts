@@ -7,6 +7,7 @@ export interface IPreset extends Document {
   tags: string[];
   price: number;
   previewAudioUrl: string;
+  previewVideoUrl?: string;
   presetFileUrl?: string | null;
   coverImageUrl: string;
   authorId: string;
@@ -23,6 +24,7 @@ const PresetSchema = new Schema<IPreset>(
     tags: { type: [String], default: [] },
     price: { type: Number, default: 0 },
     previewAudioUrl: { type: String, default: "" },
+    previewVideoUrl: { type: String, default: "" },
     presetFileUrl: { type: String, default: null },
     coverImageUrl: { type: String, default: "" },
     authorId: { type: String, default: "admin" },

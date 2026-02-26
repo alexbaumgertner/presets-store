@@ -19,6 +19,7 @@ export const cartController = {
         description: preset?.description ?? "",
         processorType: preset?.processorType ?? "",
         previewAudioUrl: preset?.previewAudioUrl ?? "",
+        previewVideoUrl: preset?.previewVideoUrl ?? "",
         coverImageUrl: preset?.coverImageUrl ?? "",
         authorId: preset?.authorId ?? "",
       };

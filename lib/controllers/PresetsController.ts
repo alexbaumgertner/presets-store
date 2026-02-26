@@ -9,6 +9,7 @@ export interface Preset {
   tags: string[];
   price: number;
   previewAudioUrl: string;
+  previewVideoUrl?: string;
   presetFileUrl?: string | null;
   coverImageUrl: string;
   authorId: string;
@@ -26,6 +27,7 @@ function docToPreset(doc: Partial<IPreset> & { _id?: any }): Preset {
     tags: Array.isArray(doc.tags) ? (doc.tags as string[]) : [],
     price: Number(doc.price ?? 0),
     previewAudioUrl: String(doc.previewAudioUrl ?? ""),
+    previewVideoUrl: doc.previewVideoUrl ? String(doc.previewVideoUrl) : undefined,
     presetFileUrl: doc.presetFileUrl ?? undefined,
     coverImageUrl: String(doc.coverImageUrl ?? ""),
     authorId: String(doc.authorId ?? ""),
@@ -72,6 +74,7 @@ export class PresetsController {
       tags: Array.isArray(payload.tags) ? (payload.tags as string[]) : [],
       price: Number(payload.price ?? 0),
       previewAudioUrl: String(payload.previewAudioUrl ?? ""),
+      previewVideoUrl: String(payload.previewVideoUrl ?? ""),
       presetFileUrl: payload.presetFileUrl ?? null,
       coverImageUrl: String(payload.coverImageUrl ?? ""),
       authorId: String(payload.authorId ?? ""),

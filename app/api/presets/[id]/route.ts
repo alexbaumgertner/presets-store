@@ -22,6 +22,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
       tags: preset.tags,
       price: preset.price,
       previewAudioUrl: preset.previewAudioUrl,
+      previewVideoUrl: preset.previewVideoUrl,
       coverImageUrl: preset.coverImageUrl,
       isPublished: preset.isPublished
     }

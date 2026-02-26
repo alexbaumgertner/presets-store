@@ -24,6 +24,7 @@ export function NewPresetForm() {
       const presetFile = (values as any).presetFile?.originFileObj;
       const previewAudio = (values as any).previewAudio?.originFileObj;
       const coverImage = (values as any).coverImage?.originFileObj;
+      formData.append("previewVideoUrl", String(values.previewVideoUrl ?? "").trim());
       if (presetFile) formData.append("presetFile", presetFile);
       if (previewAudio) formData.append("previewAudio", previewAudio);
       if (coverImage) formData.append("coverImage", coverImage);
@@ -77,6 +78,9 @@ export function NewPresetForm() {
         <Upload maxCount={1} beforeUpload={() => false}>
           <Button>Select preview audio</Button>
         </Upload>
+      </Form.Item>
+      <Form.Item name="previewVideoUrl" label="Preview video URL (YouTube)" rules={[{ required: false }]}>
+        <Input placeholder="https://www.youtube.com/watch?v=..." />
       </Form.Item>
       <Form.Item
         name="coverImage"

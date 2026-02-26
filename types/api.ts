@@ -12,6 +12,7 @@ export interface PresetDto {
   tags: string[];
   price: number;
   previewAudioUrl: string;
+  previewVideoUrl?: string;
   presetFileUrl?: string | null;
   coverImageUrl: string;
   isPublished: boolean;
@@ -30,6 +31,7 @@ export interface CartItemDto {
   description?: string;
   processorType?: string;
   previewAudioUrl?: string;
+  previewVideoUrl?: string;
   coverImageUrl?: string;
   authorId?: string;
 }

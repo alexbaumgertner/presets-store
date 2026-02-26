@@ -19,6 +19,7 @@ export async function GET() {
       tags: preset.tags,
       price: preset.price,
       previewAudioUrl: preset.previewAudioUrl,
+      previewVideoUrl: preset.previewVideoUrl,
       coverImageUrl: preset.coverImageUrl,
       isPublished: preset.isPublished
     }))
@@ -51,6 +52,7 @@ export async function POST(request: NextRequest) {
     const price = Number(formData.get("price") ?? 0);
     const isPublished = String(formData.get("isPublished") ?? "false") === "true";
 
+    const previewVideoUrl = String(formData.get("previewVideoUrl") ?? "").trim();
     const presetFile = formData.get("presetFile") as File | null;
     const previewAudio = formData.get("previewAudio") as File | null;
     const coverImage = formData.get("coverImage") as File | null;
@@ -79,6 +81,7 @@ export async function POST(request: NextRequest) {
       authorId,
       presetFileUrl: String(presetPath ?? ""),
       previewAudioUrl: String(audioPath ?? ""),
+      previewVideoUrl: previewVideoUrl || "",
       coverImageUrl: String(coverPath ?? "")
     });
 

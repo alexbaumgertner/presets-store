@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import { Button, Card, Tag, Typography } from "antd";
+import { Button, Card, Tag } from "antd";
 import Link from "next/link";
-import { presetsController, type Preset } from "@/lib/controllers/PresetsController";
-import { BuyButton } from "@/components/BuyButton";
+import { presetsController } from "@/lib/controllers/PresetsController";
+import { PresetVideoPlayer } from "@/components/PresetVideoPlayer";
 
 export default async function PresetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -11,14 +11,20 @@ export default async function PresetDetailsPage({ params }: { params: Promise<{ 
     return notFound();
   }
 
+  const hasVideo = preset.previewVideoUrl && preset.previewVideoUrl.trim() !== "";
+
   return (
     <Card
       cover={
-        <img
-          src={preset.coverImageUrl}
-          alt={preset.title}
-          style={{ maxHeight: 450, objectFit: "cover" }}
-        />
+        hasVideo ? (
+          <PresetVideoPlayer url={preset.previewVideoUrl!} height="450px" />
+        ) : (
+          <img
+            src={preset.coverImageUrl}
+            alt={preset.title}
+            style={{ maxHeight: 450, objectFit: "cover" }}
+          />
+        )
       }
     >
       <h1>{preset.title}</h1>
