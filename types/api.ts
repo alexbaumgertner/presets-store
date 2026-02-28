@@ -35,3 +35,14 @@ export interface CartItemDto {
   coverImageUrl?: string;
   authorId?: string;
 }
+
+export interface ReviewDto {
+  _id: string;
+  presetId: string;
+  userId: string;
+  userName?: string | null;
+  userImage?: string | null;
+  score: number;
+  comment?: string | null;
+  createdAt: string;
+}

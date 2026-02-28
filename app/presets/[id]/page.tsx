@@ -2,11 +2,18 @@ import { notFound } from "next/navigation";
 import { Button, Card, Tag } from "antd";
 import Link from "next/link";
 import { presetsController } from "@/lib/controllers/PresetsController";
+import { reviewController } from "@/lib/controllers/ReviewController";
+import { getCurrentAppUser } from "@/lib/auth";
 import { PresetVideoPlayer } from "@/components/PresetVideoPlayer";
+import { PresetReviews } from "@/components/PresetReviews";
 
 export default async function PresetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const preset = await presetsController.getById(id);
+  const [preset, user, reviews] = await Promise.all([
+    presetsController.getById(id),
+    getCurrentAppUser(),
+    reviewController.getByPresetId(id),
+  ]);
   if (!preset || !preset.isPublished) {
     return notFound();
   }
@@ -35,11 +42,14 @@ export default async function PresetDetailsPage({ params }: { params: Promise<{ 
           <Tag key={t}>{t}</Tag>
         ))}
       </div>
-      <audio controls src={preset.previewAudioUrl} style={{ width: "100%" }} />
+      {preset.previewAudioUrl?.trim() !== "" && (
+        <audio controls src={preset.previewAudioUrl} style={{ width: "100%" }} />
+      )}
       <h4>${preset.price.toFixed(2)}</h4>
       <Link href={preset.presetFileUrl ?? ""}>
         <Button>Download</Button>
       </Link>
+      <PresetReviews presetId={id} initialReviews={reviews} isSignedIn={!!user} />
       <div style={{ marginTop: 16 }}>
         <Link href="/presets">
           <Button>Back to presets</Button>

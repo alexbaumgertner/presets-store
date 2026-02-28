@@ -1,2 +1,2 @@
-export const ROLES = ["user", "manager", "admin"] as const;
+export const ROLES = ["user", "manager", "admin", "customer"] as const;
 export type AppRole = (typeof ROLES)[number];

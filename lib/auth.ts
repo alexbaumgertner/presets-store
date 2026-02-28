@@ -19,7 +19,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       await connectToDatabase();
       let dbUser = await UserModel.findOne({ email }).lean().exec();
       if (!dbUser) {
-        const role = process.env.ADMIN_EMAIL === email ? "admin" : "user";
+        const role = process.env.ADMIN_EMAIL === email ? "admin" : "customer";
         const created = await UserModel.create({
           email,
           name: user.name ?? (profile as any)?.name ?? undefined,
